@@ -41,8 +41,11 @@ jobs:
       - name: Create terraform cache
         uses: actions/cache@v4
         with:
-          path: .terraform*
+          path: ~/.terraform*
           key: terraform-cache-${{ runner.os }}-${{ github.ref }}
+          restore-keys: |
+            terraform-cache-${{ runner.os }}-
+            terraform-cache-
 
   terraform_check:
     runs-on: ubuntu-latest
@@ -54,8 +57,11 @@ jobs:
       - name: Restore terraform cache
         uses: actions/cache@v4
         with:
-          path: .terraform*
+          path: ~/.terraform*
           key: terraform-cache-${{ runner.os }}-${{ github.ref }}
+          restore-keys: |
+            terraform-cache-${{ runner.os }}-
+            terraform-cache-
           fail-on-cache-miss: true
 
       - name: Terraform Plan
