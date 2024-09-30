@@ -39,9 +39,9 @@ jobs:
         run: terraform init
 
       - name: Create terraform cache
-        uses: actions/cache/save@v4
+        uses: actions/cache@v4
         with:
-          path: .terraform*
+          path: .terraform
           key: terraform-cache-${{ runner.os }}-${{ github.sha }}
 
   terraform_check:
@@ -52,14 +52,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore terraform cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         with:
-          path: .terraform*
+          path: .terraform
           key: terraform-cache-${{ runner.os }}-${{ github.sha }}
-          fail-on-cache-miss: false
+          fail-on-cache-miss: true
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform fmt
 
   terraform_plan:
     runs-on: ubuntu-latest
@@ -69,9 +69,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore terraform cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         with:
-          path: .terraform*
+          path: .terraform
           key: terraform-cache-${{ runner.os }}-${{ github.sha }}
           fail-on-cache-miss: true
 
@@ -92,9 +92,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore terraform cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         with:
-          path: .terraform*
+          path: .terraform
           key: terraform-cache-${{ runner.os }}-${{ github.sha }}
           fail-on-cache-miss: true
 
