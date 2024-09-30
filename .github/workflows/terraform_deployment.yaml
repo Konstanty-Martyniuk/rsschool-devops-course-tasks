@@ -56,9 +56,6 @@ jobs:
         with:
           path: .terraform*
           key: terraform-cache-${{ runner.os }}-${{ github.ref }}
-          restore-keys: |
-            terraform-cache-${{ runner.os }}-
-            terraform-cache-
           fail-on-cache-miss: true
 
       - name: Terraform Plan
