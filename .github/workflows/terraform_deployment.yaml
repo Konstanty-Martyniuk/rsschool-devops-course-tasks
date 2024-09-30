@@ -109,5 +109,10 @@ jobs:
           aws-region: eu-north-1
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.TERRAFORM_GITHUB_ACTIONS_ROLE_NAME }}
 
+      - name: Terraform Init with Reconfigure
+        run: terraform init -reconfigure
+        working-directory: task-1/basic_config
+
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        working-directory: task-1/basic_config
