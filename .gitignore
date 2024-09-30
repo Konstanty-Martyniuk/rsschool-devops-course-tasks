@@ -1,0 +1,29 @@
+# Default ignored files
+/shelf/
+/.idea/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Exclude all hidden terraform files and directories
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+
+# Exclude any backup or temporary files
+*.backup
+*.log
+*.zip
+
+# Exclude Terraform plan files
+*.tfplan
+
+# Exclude .terraform.lock.hcl file
+.terraform.lock.hcl
+
+# Exclude any other temporary or sensitive files
+*.pem
+*.key
