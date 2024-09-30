@@ -73,7 +73,7 @@ jobs:
         with:
           path: .terraform
           key: terraform-cache-${{ runner.os }}-${{ github.sha }}
-          fail-on-cache-miss: true
+          fail-on-cache-miss: false
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -96,7 +96,7 @@ jobs:
         with:
           path: .terraform
           key: terraform-cache-${{ runner.os }}-${{ github.sha }}
-          fail-on-cache-miss: true
+          fail-on-cache-miss: false
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
