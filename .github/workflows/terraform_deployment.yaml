@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .terraform*
-          key: terraform-cache-${{ runner.os }}-${{ github.run_id }}
+          key: terraform-cache-${{ runner.os }}-v1
 
   terraform_check:
     runs-on: ubuntu-latest
@@ -55,8 +55,8 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .terraform*
-          key: terraform-cache-${{ runner.os }}-${{ github.run_id }}
-          fail-on-cache-miss: false
+          key: terraform-cache-${{ runner.os }}-v1
+          fail-on-cache-miss: true
 
       - name: Terraform Plan
         run: terraform fmt
@@ -72,7 +72,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .terraform*
-          key: terraform-cache-${{ runner.os }}-${{ github.run_id }}
+          key: terraform-cache-${{ runner.os }}-v1
           fail-on-cache-miss: true
 
       - name: Configure AWS credentials
@@ -95,7 +95,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .terraform*
-          key: terraform-cache-${{ runner.os }}-${{ github.run_id }}
+          key: terraform-cache-${{ runner.os }}-v1
           fail-on-cache-miss: true
 
       - name: Configure AWS credentials
