@@ -1,0 +1,108 @@
+---
+name: Terraform Deployment
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  TF_VAR_aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+  TERRAFORM_GITHUB_ACTIONS_ROLE_NAME: ${{ vars.TERRAFORM_GITHUB_ACTIONS_ROLE_NAME }}
+  TERRAFORM_VERSION: ${{ vars.TERRAFORM_VERSION }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform_init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-north-1
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.TERRAFORM_GITHUB_ACTIONS_ROLE_NAME }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Create terraform cache
+        uses: actions/cache/save@v4
+        with:
+          path: .terraform*
+          key: terraform-cache-${{ runner.os }}-${{ github.run_id }}
+
+  terraform_check:
+    runs-on: ubuntu-latest
+    needs: terraform_init
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Restore terraform cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .terraform*
+          key: terraform-cache-${{ runner.os }}-${{ github.run_id }}
+          fail-on-cache-miss: true
+
+      - name: Terraform Plan
+        run: terraform fmt --check
+
+  terraform_plan:
+    runs-on: ubuntu-latest
+    needs: terraform_check
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Restore terraform cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .terraform*
+          key: terraform-cache-${{ runner.os }}-${{ github.run_id }}
+          fail-on-cache-miss: true
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-north-1
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.TERRAFORM_GITHUB_ACTIONS_ROLE_NAME }}
+
+      - name: Terraform Plan
+        run: terraform plan -input=false
+
+  terraform_apply:
+    runs-on: ubuntu-latest
+    needs: terraform_plan
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Restore terraform cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .terraform*
+          key: terraform-cache-${{ runner.os }}-${{ github.run_id }}
+          fail-on-cache-miss: true
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-north-1
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.TERRAFORM_GITHUB_ACTIONS_ROLE_NAME }}
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
