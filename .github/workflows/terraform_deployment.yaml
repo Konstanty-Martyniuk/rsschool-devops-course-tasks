@@ -83,6 +83,7 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -input=false
+        working-directory: task-1/basic_config
 
   terraform_apply:
     runs-on: ubuntu-latest
