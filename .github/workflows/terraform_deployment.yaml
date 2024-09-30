@@ -59,7 +59,7 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Terraform Plan
-        run: terraform fmt
+        run: terraform plan
 
   terraform_plan:
     runs-on: ubuntu-latest
