@@ -99,7 +99,7 @@ jobs:
       - name: Restore terraform cache
         uses: actions/cache/restore@v4
         with:
-          path: .terraform*
+          path: ~/.terraform*
           key: terraform-cache-1.9.6-${{ github.ref }}
           fail-on-cache-miss: true
 
